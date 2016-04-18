@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS定位服务 | Noah&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在做公司内部的一个项目。主要需求很简单，就是每隔N分钟向服务器发送设备的位置，不管此时App是运行在前台还是后台。这里总结一下使用iOS定位服务的一些关键点和需要注意的地方。
+App 的设置
+因为App需要在后台的时候也能不断地获取设备的位置。所以要将Capablities里面的BackgroundMode 设置成Enable。并且勾选其中的Location updates选项。
+在iOS8以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS定位服务">
+<meta property="og:url" content="http://noahli.com/2016/04/18/iOS-Core-Location/index.html">
+<meta property="og:site_name" content="Noah's Blog">
+<meta property="og:description" content="最近在做公司内部的一个项目。主要需求很简单，就是每隔N分钟向服务器发送设备的位置，不管此时App是运行在前台还是后台。这里总结一下使用iOS定位服务的一些关键点和需要注意的地方。
+App 的设置
+因为App需要在后台的时候也能不断地获取设备的位置。所以要将Capablities里面的BackgroundMode 设置成Enable。并且勾选其中的Location updates选项。
+在iOS8以">
+<meta property="og:updated_time" content="2016-04-18T08:16:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS定位服务">
+<meta name="twitter:description" content="最近在做公司内部的一个项目。主要需求很简单，就是每隔N分钟向服务器发送设备的位置，不管此时App是运行在前台还是后台。这里总结一下使用iOS定位服务的一些关键点和需要注意的地方。
+App 的设置
+因为App需要在后台的时候也能不断地获取设备的位置。所以要将Capablities里面的BackgroundMode 设置成Enable。并且勾选其中的Location updates选项。
+在iOS8以">
+  
+    <link rel="alternate" href="/atom.xml" title="Noah&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Noah&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://noahli.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-iOS-Core-Location" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/18/iOS-Core-Location/" class="article-date">
+  <time datetime="2016-04-18T07:47:54.000Z" itemprop="datePublished">2016-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS定位服务
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在做公司内部的一个项目。主要需求很简单，就是每隔N分钟向服务器发送设备的位置，不管此时App是运行在前台还是后台。<br>这里总结一下使用iOS定位服务的一些关键点和需要注意的地方。</p>
+<h2 id="App-的设置"><a href="#App-的设置" class="headerlink" title="App 的设置"></a>App 的设置</h2><ol>
+<li>因为App需要在后台的时候也能不断地获取设备的位置。所以要将Capablities里面的BackgroundMode 设置成Enable。并且勾选其中的Location updates选项。</li>
+<li>在iOS8以后，需要在info.plist里面添加NSLocationAlwaysUsageDescription或者NSLocationWhenInUseUsageDescription,这两个key都是NSString类型。使用哪个（或者两者都添加）取决于申请定位的权限，这个下文会提到。这个所谓的描述就是当系统提示用户App要使用定位的时候，会加在系统提示的后面，如图。</li>
+</ol>
+<h2 id="初始化CLLocationManager"><a href="#初始化CLLocationManager" class="headerlink" title="初始化CLLocationManager"></a>初始化CLLocationManager</h2><p>使用iOS定位服务需要引入系统的头文件并且实现CLLocationManagerDelegate的代理。</p>
+<pre><code>#import &lt;CoreLocation/CoreLocation.h&gt;
+</code></pre><p>先来看一下初始化的代码：</p>
+<pre><code>-(void) createLocationManager{
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    if ([_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+        [_locationManager requestAlwaysAuthorization];
+    }
+    if ([_locationManager respondsToSelector:@selector(setAllowsBackgroundLocationUpdates:)]) {
+        [_locationManager setAllowsBackgroundLocationUpdates:YES];
+    }
+    _locationManager.pausesLocationUpdatesAutomatically = NO;
+}
+</code></pre><p>iOS8以后，系统的定位权限有三种，对应设置里面的总是，永不，和App使用期间。那么根据我们App的需求，我们需要申请“总是”这种权限。相应地，我们要在info.plist里面添加的是NSLocationAlwaysUsageDescription。</p>
+<pre><code>if ([_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+    [_locationManager requestAlwaysAuthorization];
+}
+</code></pre><p>并且在iOS9之后，如果需要在后台保持定位,除了上文所说的在App的setting和info文件里面设置以外，还需要加上下面的代码：</p>
+<pre><code>if ([_locationManager respondsToSelector:@selector(setAllowsBackgroundLocationUpdates:)]) {
+    [_locationManager setAllowsBackgroundLocationUpdates:YES];
+}
+</code></pre><p>整个初始化完成以后，调用以下API系统就会开始定位了</p>
+<pre><code>[_locationManager startUpdatingLocation];
+</code></pre><h2 id="在代理里面实现位置更新的代码"><a href="#在代理里面实现位置更新的代码" class="headerlink" title="在代理里面实现位置更新的代码"></a>在代理里面实现位置更新的代码</h2><p>正常来说，完成上面的所有设置，就可以使用iOS系统的定位服务了。<br>系统会每秒都调用</p>
+<pre><code>-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray&lt;CLLocation *&gt; *)locations
+</code></pre><p>这个代理方法，我们所要做的就是在这里处理系统返回回来的位置信息。<br>CLLocation这个类里面包括的一些常用的位置信息有经度、纬度、海拔、速度、精确度等等，根据项目的需求可以对其进行相应的处理。</p>
+<p>到这里，最基础的部分已经完成。接下来会探讨一些别的配置。</p>
+<h2 id="pausesLocationUpdatesAutomatically属性"><a href="#pausesLocationUpdatesAutomatically属性" class="headerlink" title="pausesLocationUpdatesAutomatically属性"></a>pausesLocationUpdatesAutomatically属性</h2><p>贴上一段官网对这个属性的描述：</p>
+<p>Allowing the location manager to pause updates can improve battery life on the target device without sacrificing location data. When this property is set to YES, the location manager pauses updates (and powers down the appropriate hardware) at times when the location data is unlikely to change. For example, if the user stops for food while using a navigation app, the location manager might pause updates for a period of time. You can help the determination of when to pause location updates by assigning a value to the activityTypeproperty.</p>
+<p>大致的意思就是如果这个属性设置成YES（默认的也是YES），那么系统会检测如果设备有一段时间没有移动，就会自动停掉位置更新服务。<strong>这里需要注意的是，一旦定位服务停止了，只有当用户再次开启App的时候定位服务才会重新启动。</strong><br>这里的一段时间是系统自动判定的，可以通过设置activityTypeproperty这个属性来决定这个时间的长短。<br>API的意思是，类似导航类的App,系统检验的时间会稍长一点，想运动类的App，就会比导航类的短一点。但是具体时间还是由系统来决定。</p>
+<h2 id="DeferredUpdates"><a href="#DeferredUpdates" class="headerlink" title="DeferredUpdates"></a>DeferredUpdates</h2><p>默认地，定位服务的代理会每秒钟都更新一次位置，这样对电池的消耗量会特别地大。除了设置pausesLocationUpdatesAutomatically这个属性以外，iOS还提供了DeferredUpdates的机制。</p>
+<p>官方API文档：</p>
+<pre><code>- (void)allowDeferredLocationUpdatesUntilTraveled:(CLLocationDistance)distance
+                                      timeout:(NSTimeInterval)timeout
+</code></pre><p>distance：<br>    The distance (in meters) from the current location that must be travelled before event delivery resumes. To specify an unlimited distance, pass the CLLocationDistanceMaxconstant.</p>
+<p>timeout：<br>    The amount of time (in seconds) from the current time that must pass before event delivery resumes. To specify an unlimited amount of time, pass the CLTimeIntervalMax constant.</p>
+<p>就是你可以设置让系统每隔多远或者每隔多长时间更新一次位置。注意是“或”的关系，满足一个就会更新。<br>使用这个方法有很多要注意的地方：</p>
+<ol>
+<li>desiredAccuracy必须设置成kCLLocationAccuracyBest</li>
+<li>distanceFilter必须设置成kCLErrorDeferredDistanceFiltered</li>
+<li>必须能够使用GPS进行定位（而不仅仅是移动数据或者Wi-Fi）</li>
+<li><strong>非常重要的一点，DeferredUpdates只会出现在设备进入低耗电量的状态，App运行在前台或者设备连接在Xcode上正在调试是不会触发的。（所以不可能在Debug的时候打印Log来检验，要调试的话，需要写一些Log存在本地的数据库）</strong></li>
+</ol>
+<p>官网的Example：</p>
+<pre><code>-(void)locationManager:(CLLocationManager *)manager
+didUpdateLocations:(NSArray *)locations {
+  // Add the new locations to the hike
+  [self.hike addLocations:locations];
+
+  // Defer updates until the user hikes a certain distance or a period of time has passed
+  if (!self.deferringUpdates) {
+    CLLocationDistance distance = self.hike.goal - self.hike.distance;
+    NSTimeInterval time = [self.nextUpdate timeIntervalSinceNow];
+    [self.locationManager allowDeferredLocationUpdatesUntilTraveled:distance timeout:time];
+    self.deferringUpdates = YES;
+  } }
+
+-(void)locationManager:(CLLocationManager *)manager
+    didFinishDeferredUpdatesWithError:(NSError *)error {
+  // Stop deferring updates
+  self.deferringUpdates = NO;
+
+  // Adjust for the next goal
+}
+</code></pre><h2 id="反地理编码"><a href="#反地理编码" class="headerlink" title="反地理编码"></a>反地理编码</h2><p>知道了经纬度，有时候我们需要获取这个经纬度对应的详细地址信息，示例如下：</p>
+<pre><code>CLGeocoder *revGeo = [[CLGeocoder alloc] init];
+  [revGeo reverseGeocodeLocation:location
+                 completionHandler:^(NSArray *placemarks, NSError *error) {
+                     if (!error &amp;&amp; [placemarks count] &gt; 0)
+                     {
+                         NSDictionary *dict =
+                         [[placemarks objectAtIndex:0] addressDictionary];
+                         NSArray *formattedLines = [dict objectForKey:@&quot;FormattedAddressLines&quot;];
+                         NSString *formattedAddress = formattedLines[0];
+                         NSLog(@&quot;address is %@&quot;,formattedAddress);
+                     }else{
+                         NSLog(@&quot;ERROR: %@&quot;, error);
+                     }
+                 }];
+</code></pre><h2 id="关于坐标系的问题"><a href="#关于坐标系的问题" class="headerlink" title="关于坐标系的问题"></a>关于坐标系的问题</h2><p>最后讲一下关于坐标系的问题。<br>世界通用的坐标系是WGS坐标系，中国国测局的坐标系是GCJ，百度有自己的坐标系。<br>同样的经纬度应用在不同的坐标系会有所偏差，在Github上面有一个库可以实现不同坐标系之间的转化：<br><a href="https://github.com/TinyQ/TQLocationConverter" target="_blank" rel="external">https://github.com/TinyQ/TQLocationConverter</a><br>系统返回的自然是根据WGS定位的。如果使用百度SDK获取的就是Baidu坐标系的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://noahli.com/2016/04/18/iOS-Core-Location/" data-id="cin5tbuby0001ahka8yctlcop" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/18/Swift-Currying/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Swift中的函数柯里化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Swift/" style="font-size: 10px;">Swift</a> <a href="/tags/iOS/" style="font-size: 10px;">iOS</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/04/18/iOS-Core-Location/">iOS定位服务</a>
+          </li>
+        
+          <li>
+            <a href="/2016/04/18/Swift-Currying/">Swift中的函数柯里化</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Noah Li<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
