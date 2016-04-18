@@ -64,149 +64,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-test" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/18/test/" class="article-date">
-  <time datetime="2016-04-18T03:24:26.000Z" itemprop="datePublished">2016-04-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/18/test/">test</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://noahli.com/2016/04/18/test/" data-id="cin5fzcm600026mva0c585gki" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-currying" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/15/currying/" class="article-date">
-  <time datetime="2016-04-15T04:31:29.000Z" itemprop="datePublished">2016-04-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/15/currying/">currying</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#Function Currying in Swift</p>
-<p>什么是函数柯里化：<br>在计算机科学中，柯里化（Currying）是把接受多个参数的函数变换成接受一个单一参数(最初函数的第一个参数)的函数，并且返回接受余下的参数且返回结果的新函数的技术。</p>
-<p>概念很抽象，让我们从一个简单的例子开始逐步了解到底什么是函数柯里化。<br>我们有一个接受两个Int类型的参数的Add函数</p>
-<pre><code>func add(a: Int, b: Int) -&gt; Int {
-  return a + b
-}
-</code></pre><p>当我们调用这个函数时：</p>
-<pre><code>let sum = add(2, 3) // sum = 5
-</code></pre><p>现在有一个需求，我们要将一个整数集合里面的每一个元素都加2.<br>那么我们可以这样写</p>
-<pre><code>let xs = 1...100
-let x = xs.map { add($0, 2) } // x = [3, 4, 5, 6, etc]
-</code></pre><p>这样写看起来还行。但是我总觉得很奇怪。因为我要为Add这个函数创建一个闭包。<br>如果我们只关注函数的类型，就会发现Add实际上是一个(Int,Int)-&gt;Int的函数。但是在这里，我们想要传给map函数的，实际上是一个(A)-&gt;B的函数。</p>
-<p>所以，如果我们有一个(A)-&gt;B这样的函数，那么我们就不必传入一个闭包，而是直接传这个函数就好了。所以我们可以这样：</p>
-<pre><code>func addTwo(a: Int) -&gt; Int {
-  return add(a, 2)
-}
-
-let xs = 1...100
-let x = xs.map(addTwo) // x = [3, 4, 5, 6, etc]
-</code></pre><p>但是这个函数其实把“2”写死了。那如果我还要+3，+4…+100呢？<br>所以我们最好写一个比较通用的函数。</p>
-<pre><code>func add(a: Int) -&gt; (Int -&gt; Int) {
-  return { b in a + b }
-}
-</code></pre><p>那么我们现在可以这样子用了：</p>
-<pre><code>let sum = add(2)(3) // sum = 5
-
-let addTwo = add(2)
-let xs = 1...100
-let x = xs.map(addTwo) // x = [3, 4, 5, 6, etc]
-</code></pre><p>这个看起来已经不错了，但是我们通过泛型可以让这个函数更加通用一点。</p>
-<pre><code>func curry&lt;A, B, C&gt;(f: (A, B) -&gt; C) -&gt; (A -&gt; (B -&gt; C)) {
-  return { a: A in
-            { b: B in
-              return f(a, b) // returns C
-            }
-         }
-}
-</code></pre><p>在Swift中，可以最终简化成这样：</p>
-<pre><code>func curry&lt;A, B, C&gt;(f: (A, B) -&gt; C) -&gt; A -&gt; B -&gt; C {
-  return { a in { b in f(a, b) } }
-}
-</code></pre><p>那么讲了那么多，这东西有什么用呢？<br>假设有这样一个需求，我需要记录某个系统的日志，日志需要包含以下几个要素：<br>操作人的名字name，时间time，日志类型type和日志内容msg。<br>一般可能会写这样的函数来调用：</p>
-<pre><code>func createLogInfo(name:String, time:String, type:String, msg:String) -&gt;String{
-    return &quot;name : \(name)\n&quot; + &quot;type : \(time)\n&quot; + (&quot;message : \(msg)\n&quot; +&quot;time: \(time)    &quot;)
-}
-
-let log = createLogInfo(&quot;Noah&quot;, time: &quot;today&quot;, type: &quot;Info&quot;, msg: &quot;Today&apos;s weather is good&quot;)
-</code></pre><p>现在我觉得每次都要传那么多参数很麻烦，对于我自己写的日志，我希望有一个简单一点的方法：</p>
-<pre><code>func createMyLogInfo(time:String, type:String, msg:String) -&gt;String{
-    return createLogInfo(&quot;Noah&quot;, time: time, type: type, msg: msg)
-}
-</code></pre><p>我希望有一个只写Info类型日志的方法来简化操作：</p>
-<pre><code>func createInfoLog(name:String, time:String, msg:String) -&gt;String{
-    return createLogInfo(name, time: time, type: &quot;Info&quot;, msg: msg)
-}
-</code></pre><p>这样我每次都要写一个函数来简化我的操作。<br>如果使用柯里化：</p>
-<pre><code>func curryFour&lt;A,B,C,D,E&gt;(f:(A,B,C,D)-&gt;E) -&gt;A-&gt;B-&gt;C-&gt;D-&gt;E{
-    return {
-        a in {b in {c in {d in f(a,b,c,d) }}}
-    }
-}
-let curriedLogInfo = curryFour(createLogInfo)
-curriedLogInfo(&quot;Noah&quot;)(&quot;Today&quot;)(&quot;Error&quot;)(&quot;SometingWrong&quot;)
-let curriedMyLog = curriedLogInfo(&quot;Noah&quot;)
-curriedMyLog(&quot;Tmr&quot;)(&quot;Info&quot;)(&quot;SomeInfo&quot;)
-let curriedMyTodayLog = curriedLogInfo(&quot;Noah&quot;)(&quot;Today&quot;)
-curriedMyTodayLog(&quot;Warining&quot;)(&quot;FBI&quot;)
-</code></pre><p>总结：<br>现在我们重新再来看一下柯里化的定义：<br>在计算机科学中，柯里化（Currying）是把接受多个参数的函数变换成接受一个单一参数(最初函数的第一个参数)的函数，并且返回接受余下的参数且返回结果的新函数的技术。</p>
-<p>关键点就在于能够把函数作为参数，并且可以把函数作为返回值来使用。<br>所以函数柯里化实际上应该是“函数作为一等公民”这个特性所带来的附加的属性。就像数学里面能够从公理推导出定理一样。<br>函数柯里化的作用，我现在感受到的主要是能够方便地把一些通用的函数通过柯里化这种技术变得更加地适用某些特殊的场景。<br>相对地，反柯里化就是将函数变得拥有更强的普适性。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://noahli.com/2016/04/15/currying/" data-id="cin5fzcm400016mvaiop9u5ob" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-Swift-Currying" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/15/Swift-Currying/" class="article-date">
@@ -292,7 +149,7 @@ curriedMyTodayLog(&quot;Warining&quot;)(&quot;FBI&quot;)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://noahli.com/2016/04/15/Swift-Currying/" data-id="cin5fzcm000006mva01ursicc" class="article-share-link">Share</a>
+      <a data-url="http://noahli.com/2016/04/15/Swift-Currying/" data-id="cin5g08lz00006zva8z4videu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -311,23 +168,9 @@ curriedMyTodayLog(&quot;Warining&quot;)(&quot;FBI&quot;)
 
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
-    </div>
-  </div>
-
 
   
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/iOS/" style="font-size: 10px;">iOS</a>
-    </div>
-  </div>
-
   
     
   <div class="widget-wrap">
@@ -344,14 +187,6 @@ curriedMyTodayLog(&quot;Warining&quot;)(&quot;FBI&quot;)
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2016/04/18/test/">test</a>
-          </li>
-        
-          <li>
-            <a href="/2016/04/15/currying/">currying</a>
-          </li>
         
           <li>
             <a href="/2016/04/15/Swift-Currying/">(no title)</a>
