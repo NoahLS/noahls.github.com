@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Swift 基础知识 | Noah&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Swift 简介这是Swift入门系列，比较适合已经掌握一两门语言之后，想要学习Swift的人参考。另外这个系列会专注于理论的东西。不会跟工具结合起来。希望达到的目的是能够看完之后就可以看懂大部分使用Swift写的代码。所以其实最适合的是从Object-C转Swift的开发者。
+先贴上一段官网对Swift的介绍
+Swift is a powerful and intuitive programmi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Swift 基础知识">
+<meta property="og:url" content="http://noahli.com/2016/06/28/Swift-Tutorial-1/index.html">
+<meta property="og:site_name" content="Noah's Blog">
+<meta property="og:description" content="Swift 简介这是Swift入门系列，比较适合已经掌握一两门语言之后，想要学习Swift的人参考。另外这个系列会专注于理论的东西。不会跟工具结合起来。希望达到的目的是能够看完之后就可以看懂大部分使用Swift写的代码。所以其实最适合的是从Object-C转Swift的开发者。
+先贴上一段官网对Swift的介绍
+Swift is a powerful and intuitive programmi">
+<meta property="og:updated_time" content="2016-06-29T03:01:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Swift 基础知识">
+<meta name="twitter:description" content="Swift 简介这是Swift入门系列，比较适合已经掌握一两门语言之后，想要学习Swift的人参考。另外这个系列会专注于理论的东西。不会跟工具结合起来。希望达到的目的是能够看完之后就可以看懂大部分使用Swift写的代码。所以其实最适合的是从Object-C转Swift的开发者。
+先贴上一段官网对Swift的介绍
+Swift is a powerful and intuitive programmi">
+  
+    <link rel="alternate" href="/atom.xml" title="Noah&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Noah&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://noahli.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Swift-Tutorial-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/28/Swift-Tutorial-1/" class="article-date">
+  <time datetime="2016-06-28T01:43:40.000Z" itemprop="datePublished">2016-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Swift 基础知识
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Swift-简介"><a href="#Swift-简介" class="headerlink" title="Swift 简介"></a>Swift 简介</h2><p>这是Swift入门系列，比较适合已经掌握一两门语言之后，想要学习Swift的人参考。<br>另外这个系列会专注于理论的东西。不会跟工具结合起来。希望达到的目的是能够看完之后就可以看懂大部分使用Swift写的代码。所以其实最适合的是从Object-C转Swift的开发者。</p>
+<p>先贴上一段官网对Swift的介绍</p>
+<p>Swift is a powerful and intuitive programming language for macOS, iOS, watchOS and tvOS. Writing Swift code is interactive and fun, the syntax is concise yet expressive, and Swift includes modern features developers love. Swift code is safe by design, yet also produces software that runs lightning-fast.</p>
+<p>我总结就是简单，安全，快。</p>
+<p>使用Object-C开发App已经两年了。其实很容易感觉到Object-C这种语言有相当多的缺点。其中感觉最明显的一点就是函数的命名问题。用Object-C的函数名字太长了，看起来非常地冗余。经常会出现一些函数命名是需要多行来显示的。Swift的语法比Object-C简洁了非常多。并且借鉴了许多其它语言的优点，加入了大量的语法糖。学习起来会觉得比较有趣。</p>
+<p>关于安全。我现在能体会到Swift比较安全的只有一点，那就是舍弃了null而使用Optional语法。Optional在理解Swift语法中是非常重要的，在之后会详细地说明。</p>
+<h2 id="基础语法与特性"><a href="#基础语法与特性" class="headerlink" title="基础语法与特性"></a>基础语法与特性</h2><h4 id="变量与常量"><a href="#变量与常量" class="headerlink" title="变量与常量"></a>变量与常量</h4><p>使用var声明变量，使用let声明常量。<br>如果如下尝试改变用let声明的变量，编译器就会报错：<strong>“Cannot assign value: ‘str’ is a ‘let’ constant</strong></p>
+<pre><code>let str = &quot;String&quot;
+str = &quot;String 2&quot;
+</code></pre><h4 id="类型推断"><a href="#类型推断" class="headerlink" title="类型推断"></a>类型推断</h4><p>看到上面的变量声明之后，你可能会觉得Swift和JavaScript一样是一种弱类型的语言。但其实Swift是强类型的语言。上面的变量声明还可以是这样：</p>
+<pre><code>let str: String = “String”
+</code></pre><p>其中String就是变量的类型。上面的:String 之所以可以省略是因为后面给变量str赋值了一个String类型的常量。所以编译器能够推断出str也是String类型的。</p>
+<h4 id="类和函数"><a href="#类和函数" class="headerlink" title="类和函数"></a>类和函数</h4><pre><code>class FirstClass{
+    let total : Double
+    let pro : String
+
+    init(total: Double, pro :String) {
+        self.total = total
+        self.pro = pro
+    }
+
+    func doSomeThing(param1: String, param2: String) -&gt; String{
+        print(&quot;do something \(str)&quot;)
+        return &quot;over&quot;
+    }
+}
+
+var fc = FirstClass(total: 24,pro: &quot;sddf&quot;)
+fc.doSomeThing(param1: &quot;Hello&quot;,param2: &quot;World&quot;)
+</code></pre><p>从上面的代码可以看到类和函数是如何定义和使用的。需要注意的是init方法是每个类的构造函数。不需要前缀func。 函数的返回值用-&gt; 表示，这个和ES6里面的箭头函数是一样的。另外一个和其它编程语言不同的是，在使用函数的时候，需要把参数的名字也加上。如例子中的param1和param2。不过对于这些简单常见的错误，编译器都能够检测出来并且给出推荐如何修改。这是对Swift初学者来说比较好的一件事情。</p>
+<p>上面的代码中还有一段打印的函数：</p>
+<pre><code>print(&quot;do something \(str)&quot;)
+</code></pre><p>这里示范了如何在控制台打印字符以及如何在字符中包含参数（使用反斜杠加括号）。</p>
+<h4 id="数组和字典"><a href="#数组和字典" class="headerlink" title="数组和字典"></a>数组和字典</h4><p>先看数组的使用方法：</p>
+<pre><code>let arr = [2.0, 4.5, 3.7]
+let arrExplicit: [Double]
+
+for i in 0..&lt;arr.count{
+    print(arr[i])
+}
+</code></pre><p>这里有几点要注意的：</p>
+<ol>
+<li>数组常量的使用只需要用中括号里面加数组的元素；</li>
+<li>显式的声明一个数组变量，则变量的类型为中括号，里面是每个元素的类型；</li>
+<li>for循环的条件不需要用括号括起来；</li>
+<li>0..&lt;3 表示0到3的一个数组，但不包括3。 0…3会包括3。</li>
+</ol>
+<p>数组的一些API，见文知意：</p>
+<pre><code>arr.append(6.3)
+arr.remove(at: 3)
+arr.insert(10.9, at: 1)
+arr.append(contentsOf: [3.5,6.8])
+arr[0] = 89.23
+arr.reversed()
+arr.sort()
+</code></pre><p>字典的显示声明：</p>
+<pre><code>var dictionary: [String:Int] = [
+    &quot;one&quot; : 1,
+    &quot;two&quot; : 2,
+    &quot;three&quot; : 3
+]
+</code></pre><p>赋值一个空的字典：</p>
+<pre><code>var emptyDictionary: [Int:Int] = [:]
+</code></pre><p>字典取值：</p>
+<pre><code>let value = dictionary[&quot;one&quot;]
+</code></pre><p>字典的添加,更新和删除</p>
+<pre><code>var emptyDictionary: [Int:Int] = [:]
+emptyDictionary[1] = 12
+emptyDictionary.updateValue(14, forKey: 1)
+emptyDictionary.removeValue(forKey: 1)
+</code></pre><p>另外需要注意的是，在Swift中，Array和Dictionary是值类型的。所以使用简单的等号就可以完成拷贝了。不像有些语言还分深拷贝和浅拷贝。</p>
+<p>可见数组与字典的使用都是相当简洁的。</p>
+<h4 id="元组（Tuple）"><a href="#元组（Tuple）" class="headerlink" title="元组（Tuple）"></a>元组（Tuple）</h4><p>A tuple is a group of zero or more values represented as one value.</p>
+<p>看看代码大概就知道Tuple是什么了：</p>
+<pre><code>var tuple  = (&quot;name&quot;,12)
+var namedTuple = (name:&quot;Name&quot;,age:12)
+namedTuple.name = &quot;updateName&quot;
+</code></pre><p>其实元组就是一种数据结构，里面包含一个或多个值，并且这些值可以是不同类型的。元组中的值可以是命名的也可以是匿名的。如果是命名的，那么可以使用.符号来获取该值。<br>那么为什么要有元组这种数据结构呢？<br>可以看下以下的代码：</p>
+<pre><code>func getNameAndAge() -&gt; (String,Int){
+    return (&quot;Ace&quot;,20)
+}
+</code></pre><p>在有些情况下我们会需要一个函数有多个返回值，此时Tuple就非常有用了。</p>
+<h4 id="枚举类型（Enum）"><a href="#枚举类型（Enum）" class="headerlink" title="枚举类型（Enum）"></a>枚举类型（Enum）</h4><p>声明与使用：</p>
+<pre><code>enum iOSDeviceType {
+    case iPhone
+    case iPad
+    case iWatch
+}
+
+var myDevice = iOSDeviceType.iPhone
+</code></pre><p>当变量的类型已经明确时，赋值可以简化为：</p>
+<pre><code>var myDevice: iOSDeviceType
+myDevice = .iPhone    
+</code></pre><p>raw value<br>每个枚举都可以拥有自己的一个原生类型的raw value，所有的枚举关联的raw value必须是同一个类型的。当类型是Int时，默认按照枚举值的顺序递增其raw value。</p>
+<pre><code>enum Direction: Int {
+    case Up = 1
+    case Down // will have the raw value 2
+    case Left // will have the raw value 3
+    case Right // will have the raw value 4
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://noahli.com/2016/06/28/Swift-Tutorial-1/" data-id="ciqx6qntr0000nrkaaa4jb0df" class="article-share-link">Partager</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swift/">Swift</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/18/iOS-Core-Location/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">iOS定位服务</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Swift/">Swift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Swift/" style="font-size: 20px;">Swift</a> <a href="/tags/iOS/" style="font-size: 10px;">iOS</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/06/28/Swift-Tutorial-1/">Swift 基础知识</a>
+          </li>
+        
+          <li>
+            <a href="/2016/04/18/iOS-Core-Location/">iOS定位服务</a>
+          </li>
+        
+          <li>
+            <a href="/2016/04/18/Swift-Currying/">Swift中的函数柯里化</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Noah Li<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
